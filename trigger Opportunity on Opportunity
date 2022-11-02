@@ -1,0 +1,12 @@
+trigger Opportunity on Opportunity (before insert,after update,after insert,before update) {
+    
+    List<Opportunity> opprecord = new List<Opportunity>();
+     if(trigger.isAfter) {
+        system.debug(Trigger.New);
+      
+       CalculateCommission.getSalesagentcommission(Trigger.New);
+    
+
+}
+    
+}
