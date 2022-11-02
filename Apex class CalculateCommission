@@ -1,0 +1,47 @@
+public class CalculateCommission {
+        public static Map<Id,List<Commission__c>> salesagentcomms; 
+        public static List<Sales_Agent__c> updateagents ;
+    public static void getSalesagentcommission(List<Opportunity> opprecord){
+        List<Commission__c> commns = [Select Id,Opportunity__c,Sales_Agent__c,Opportunity__r.Amount from Commission__c where Opportunity__c IN:opprecord and Sales_Agent__c!=null and Opportunity__r.StageName = 'Pending'];
+          system.debug(commns);     
+       
+        If(commns.size()>=1){
+            
+      for(Commission__c c:commns) {
+              
+            
+                                      
+                                 if (salesagentcomms.containsKey(c.Sales_Agent__c)) {
+                                salesagentcomms.get(c.Sales_Agent__c).add(c);
+                            }
+                                 else {
+                                salesagentcomms.put(c.Sales_Agent__c, new List<Commission__c>{ c });
+                            }
+                                                               
+            }
+            
+       for(Commission__c getcomms:commns){ 
+                                    
+                               if (salesagentcomms.containsKey(getcomms.Id)) {
+                               List<Commission__c> getcommsagent = salesagentcomms.get(getcomms.Id);
+                        
+                                for (Commission__c salescom : getcommsagent) {
+                                    
+                                 Sales_Agent__c sa = new Sales_Agent__c();
+                                   
+                                 sa.Amount_Pending__c = salescom.Opportunity__r.Amount + sa.Amount_Pending__c;
+                                    
+                                 updateagents.add(sa); 
+                                    
+                                }
+                                    
+                                    }  
+            
+        }
+           system.debug(updateagents);
+           Update  updateagents;                                         
+        }
+        
+    }      
+        
+    }
